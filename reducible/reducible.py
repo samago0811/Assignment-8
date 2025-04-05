@@ -153,5 +153,61 @@ def get_longest_words(string_list):
         elif trying > current:
             result = [string_list[i]]
     return result
+# TODO: Modify this function. You may delete this comment when you are done.
+def main():
+    """The main function that calculates the longest reducible words"""
+    # create an empty word_list
+    word_list = []
+    # read words using input redirection
 
 
+
+    # where each line read from input()
+    # should be a single word. Append to word_list
+    # ensure each word has no trailing white space.
+    word_list = sys.stdin.read().split()
+    # find length of word_list
+    word_count = len(word_list)
+
+    # determine prime number N that is greater than twice
+    # the length of the word_list
+    dictsize = 2 * word_count + 1
+    while not is_prime(dictsize):
+        dictsize += 1
+    # create an empty hash_list
+    # populate the hash_list with N blank strings
+    dictable = [""] * dictsize
+    # hash each word in word_list into hash_list
+    # for collisions use double hashing
+    for inpword in word_list:
+        insert_word(inpword, dictable)
+    # create an empty hash_memo of size M
+    # we do not know a priori how many words will be reducible
+    # let us assume it is 10 percent (fairly safe) of the words
+    # then M is a prime number that is slightly greater than
+    # 0.2 * size of word_list
+    memetbsize = int(word_count * 0.2) + 1
+    while not is_prime(memetbsize):
+        memetbsize += 1
+    # populate the hash_memo with M blank strings
+    memoization = [""] * memetbsize
+    # create an empty list reducible_words
+    reducible_list = []
+    # for each word in the word_list recursively determine
+    # if it is reducible, if it is, add it to reducible_words
+    # as you recursively remove one letter at a time check
+    # first if the sub-word exists in the hash_memo. if it does
+    # then the word is reducible and you do not have to test
+    # any further. add the word to the hash_memo.
+    for inpword in word_list:
+        if is_reducible(inpword, dictable, memoization):
+            reducible_list.append(inpword)
+    # find the largest reducible wor ds in reducible_words
+    longred =  get_longest_words(reducible_list)
+    # print the reducible words in alphabetical order
+    # one word per line
+    for reducible_word in sorted(longred):
+        print(reducible_word)
+
+if __name__ == "__main__":
+    main()
